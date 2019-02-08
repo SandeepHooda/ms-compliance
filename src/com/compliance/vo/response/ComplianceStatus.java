@@ -2,19 +2,15 @@ package com.compliance.vo.response;
 
 import java.util.Set;
 
-import com.compliance.vo.db.ComplianceItem;
-
 public class ComplianceStatus {
-	Set<ComplianceItem> myComplianceItems;
+	private Set<String> myStatus ;
 
-	public Set<ComplianceItem> getMyComplianceItems() {
-		return myComplianceItems;
+	public Set<String> getMyStatus() {
+		return myStatus;
 	}
 
-	public void setMyComplianceItems(Set<ComplianceItem> myComplianceItems) {
-		this.myComplianceItems = myComplianceItems;
+	public void setMyStatus(Set<String> myStatus) {
+		this.myStatus = myStatus;
 	}
 
-	
-	
 }

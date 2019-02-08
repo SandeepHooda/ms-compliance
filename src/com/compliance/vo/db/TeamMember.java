@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class TeamMember {
 	private String _id;//Email address
-	private Set<String> myManagers;//As soon as one or more people add me to theit list this set will be auto polulated
+	private Set<String> complianceTarget;
 
 	public String get_id() {
 		return _id;
@@ -14,13 +14,14 @@ public class TeamMember {
 		this._id = _id;
 	}
 
-	public Set<String> getMyManagers() {
-		return myManagers;
+	public Set<String> getComplianceTarget() {
+		return complianceTarget;
 	}
 
-	public void setMyManagers(Set<String> myManagers) {
-		this.myManagers = myManagers;
+	public void setComplianceTarget(Set<String> complianceTarget) {
+		this.complianceTarget = complianceTarget;
 	}
+
 	
 
 }

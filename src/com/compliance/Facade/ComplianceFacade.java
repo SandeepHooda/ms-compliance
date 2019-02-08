@@ -3,9 +3,6 @@ package com.compliance.Facade;
 import com.compliance.Service.ComplianceService;
 import com.compliance.vo.db.Manager;
 import com.compliance.vo.db.TeamMember;
-import com.compliance.vo.response.AllTeamMembers;
-import com.compliance.vo.response.ComplianceStatus;
-import com.compliance.vo.response.MyReportees;
 import com.compliance.vo.response.PlainResponse;
 
 public class ComplianceFacade {
@@ -13,26 +10,24 @@ public class ComplianceFacade {
 	private ComplianceService service;
 
 	
-	public AllTeamMembers getAllTeamMembers() {
-		AllTeamMembers response = new AllTeamMembers();
-		response.setAllTeamMembers(service.getAllTeamMembers());
-		return response;
+	public TeamMember iComply(TeamMember member) {
+		return service.iComply(member);
+
 	}
-	public ComplianceStatus getMyComplianceStatus(String userEmailID) {
-		ComplianceStatus response = new ComplianceStatus();
-		response.setMyComplianceItems(service.getMyComplianceStatus(userEmailID));
-		return response;
-	}
-	
-	public MyReportees getMyReportees(String userEmailID) {
-		MyReportees response = new MyReportees();
-		response.setReporteesEmailID(service.getMyReportees(userEmailID));
-		return response;
+	public TeamMember getMyComplianceStatus(String userEmailID) {
+		
+		return service.getMyComplianceStatus(userEmailID);
+		
 	}
 	
-	public PlainResponse registerNewUser(TeamMember member) {
+	public Manager getMyDetails(String userEmailID) {
+		
+		return service.getMyDetails(userEmailID);
+	}
+	
+	public PlainResponse registerNewUser(Manager manager) {
 		PlainResponse response = new PlainResponse();
-		response.setStatus(service.registerNewUser(member));
+		response.setStatus(service.registerNewUser(manager));
 		return response;
 		
 	}
@@ -42,6 +37,11 @@ public class ComplianceFacade {
 	public Manager deleteAReportee(Manager manager) {
 		return service.deleteAReportee(manager);
 	}
+	
+	public Manager applyConstraints(Manager manager) {
+		return service.applyConstraints(manager);
+	}
+	
 	
 	public ComplianceService getService() {
 		return service;

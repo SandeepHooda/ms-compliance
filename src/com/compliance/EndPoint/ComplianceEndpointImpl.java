@@ -19,19 +19,18 @@ public class ComplianceEndpointImpl implements ComplianceEndpoint {
 	public void setFacade(ComplianceFacade facade) {
 		this.facade = facade;
 	}
-	
 	@Override
-	public Response getAllTeamMembers() {
+	public Response iComply(TeamMember member) {
 		try {
-			return Response.ok().entity(facade.getAllTeamMembers()).build();
+			return Response.ok().entity(facade.iComply(member)).build();
 		}catch(Exception e) {
 			e.printStackTrace();
 			PlainResponse vo = new PlainResponse();
 			vo.setStatus("Internal Server Error ");
 			return Response.serverError().entity(vo).build();
 		}
-		
 	}
+	
 	@Override
 	public Response getMyComplianceStatus(String userEmailID) {
 		
@@ -46,9 +45,9 @@ public class ComplianceEndpointImpl implements ComplianceEndpoint {
 	}
 
 	@Override
-	public Response getMyReportees(String userEmailID) {
+	public Response getMyDetails(String userEmailID) {
 		try {
-			return Response.ok().entity(facade.getMyReportees(userEmailID)).build();
+			return Response.ok().entity(facade.getMyDetails(userEmailID)).build();
 		}catch(Exception e) {
 			e.printStackTrace();
 			PlainResponse vo = new PlainResponse();
@@ -59,9 +58,9 @@ public class ComplianceEndpointImpl implements ComplianceEndpoint {
 	}
 	
 	@Override
-	public Response registerNewUser(TeamMember member) {
+	public Response registerNewUser(Manager manager) {
 		try {
-			return Response.ok().entity(facade.registerNewUser(member)).build();
+			return Response.ok().entity(facade.registerNewUser(manager)).build();
 		}catch(Exception e) {
 			e.printStackTrace();
 			PlainResponse vo = new PlainResponse();
@@ -98,6 +97,19 @@ public class ComplianceEndpointImpl implements ComplianceEndpoint {
 			return Response.serverError().entity(vo).build();
 		}
 		
+	}
+
+	@Override
+	public Response applyConstraints(Manager manager) {
+		try {
+			
+			return Response.ok().entity(facade.applyConstraints(manager)).build();
+		}catch(Exception e) {
+			e.printStackTrace();
+			PlainResponse vo = new PlainResponse();
+			vo.setStatus("Internal Server Error ");
+			return Response.serverError().entity(vo).build();
+		}
 	}
 
 	

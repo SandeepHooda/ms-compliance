@@ -3,6 +3,13 @@
     width: 50%;
     padding: 10px;
 }
+.Imgcenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 70%
+}
 .contactPhoneBtn{
 	min-width: 45%;
 }

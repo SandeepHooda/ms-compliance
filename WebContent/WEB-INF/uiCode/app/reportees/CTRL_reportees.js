@@ -8,7 +8,7 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
         }
 
 	$scope.myReportees = [];
-
+	
 	$scope.showMenu = function () {
 		if(document.URL.indexOf('/menu/login') <0){//Disable hanburger in log in state
 			 $ionicSideMenuDelegate.toggleLeft();
@@ -21,10 +21,27 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 			$state.transitionTo('menu.login');
 		}
 	  
-	  $scope.getReportees = function(){
-		  $http.get(appData.getHost()+'/ws/compliance/reportees/'+$scope.emailAddress)
+	  $scope.mySelectedConstraints = function(data){
+		  if (!data){
+			  return;
+		  }
+		  if (data.indexOf('training') >=0){
+			  theCtrl.training = true;
+			}else {
+				theCtrl.training = false;
+			}
+			if (data.indexOf('phishing') >=0){
+				theCtrl.phishing = true;
+			}else {
+				theCtrl.phishing = false;
+			}
+	  }
+	  $scope.getUserDetails = function(){
+		  $http.get(appData.getHost()+'/ws/compliance/userDetails/'+$scope.emailAddress)
 	  		.then(function(response){
-	  			$scope.myReportees = response.data.reporteesEmailID ;
+	  			
+	  			$scope.myReportees = response.data.reportees ;
+	  			$scope.mySelectedConstraints(response.data.coplianceTargetForTeam);
 	  			
 	  			
 	  		},
@@ -34,6 +51,27 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 		});
 	  }
 	
+	  $scope.enforceCompliance  = function(){
+		 var teamconstraints = [];
+		 if (theCtrl.training){
+			 teamconstraints.push('training');
+		 }
+		 if (theCtrl.phishing){
+			 teamconstraints.push('phishing');
+		 }
+		 
+		 appData.showBusy();
+		 var manager = {};
+		 manager.coplianceTargetForTeam = teamconstraints ;
+		 $http.post(appData.getHost()+'/ws/compliance/applyConstraints',manager , config)
+	  		.then(function(response){
+	  			appData.hideBusy();
+	  		},
+			function(response){
+	  			appData.hideBusy();
+	  			appData.popUp("Failure", " Please try again");
+	  			});
+	  }
 	  
 	  $scope.checkEnter = function(){
 			if(event.keyCode == 13){
@@ -53,7 +91,7 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 		    
 		    $http.post(appData.getHost()+'/ws/compliance/reportee',manager , config)
 	  		.then(function(response){
-	  			
+	  			theCtrl.newReportee = "";
 	  			appData.hideBusy();
 	  			$scope.myReportees = response.data.reportees;
 	  			

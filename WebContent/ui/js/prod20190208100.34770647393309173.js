@@ -106,14 +106,74 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	
 	
 	var theCtrl = this;
-	$scope.emailAddress = window.localStorage.getItem('emailID');;
-	$scope.callCxf = function(){
-		
-		
-	
-		
+	 theCtrl.gotStatus = false;
+	 theCtrl.fullComplaint = false;
+	$scope.emailAddress = window.localStorage.getItem('emailID');
+
+	$scope.mySelectedConstraints = function(data){
+		  if (!data){
+			  return;
+		  }
+		  if (data.indexOf('training') >=0){
+			  theCtrl.training = true;
+			}else {
+				theCtrl.training = false;
+				theCtrl.fullComplaint = false;
+			}
+			if (data.indexOf('phishing') >=0){
+				theCtrl.phishing = true;
+			}else {
+				theCtrl.phishing = false;
+				theCtrl.fullComplaint = false;
+			}
+			if (theCtrl.phishing && theCtrl.training){
+				theCtrl.fullComplaint = true;
+			}
+	  }
+	 $scope.getMyComplianceStatus = function(){
+		 appData.showBusy();
+		  $http.get(appData.getHost()+'/ws/compliance/status/'+$scope.emailAddress)
+	  		.then(function(response){
+	  			
+	  			$scope.mySelectedConstraints( response.data.complianceTarget) ;
+	  			
+	  			theCtrl.gotStatus = true;
+	  			appData.hideBusy();
+	  			
+	  		},
+		function(response){
+	  			appData.hideBusy();
+			
+		});
+	  }
+
+	 $scope.iComply  = function(){
+		 var complianceTarget = [];
+		 if (theCtrl.training){
+			 complianceTarget.push('training');
+		 }
+		 if (theCtrl.phishing){
+			 complianceTarget.push('phishing');
+		 }
 		 
-	}
+		 if (complianceTarget && complianceTarget.length >=2){
+			 var member = {};
+			 member._id = $scope.emailAddress;
+			 member.complianceTarget = complianceTarget ;
+			 $http.post(appData.getHost()+'/ws/compliance/iComply',member , config)
+		  		.then(function(response){
+		  			appData.hideBusy();
+		  			theCtrl.fullComplaint = true;
+		  			$scope.mySelectedConstraints( response.data.complianceTarget) ;
+		  			//appData.popUp("Thanks", "We have recorded your response.");
+		  		},
+				function(response){
+		  			appData.hideBusy();
+		  			appData.popUp("Failure", " Please try again");
+		  			});
+		 }
+		
+	  }
 	
 	
 	 
@@ -174,7 +234,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
         }
 
 	$scope.myReportees = [];
-
+	
 	$scope.showMenu = function () {
 		if(document.URL.indexOf('/menu/login') <0){//Disable hanburger in log in state
 			 $ionicSideMenuDelegate.toggleLeft();
@@ -187,10 +247,27 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 			$state.transitionTo('menu.login');
 		}
 	  
-	  $scope.getReportees = function(){
-		  $http.get(appData.getHost()+'/ws/compliance/reportees/'+$scope.emailAddress)
+	  $scope.mySelectedConstraints = function(data){
+		  if (!data){
+			  return;
+		  }
+		  if (data.indexOf('training') >=0){
+			  theCtrl.training = true;
+			}else {
+				theCtrl.training = false;
+			}
+			if (data.indexOf('phishing') >=0){
+				theCtrl.phishing = true;
+			}else {
+				theCtrl.phishing = false;
+			}
+	  }
+	  $scope.getUserDetails = function(){
+		  $http.get(appData.getHost()+'/ws/compliance/userDetails/'+$scope.emailAddress)
 	  		.then(function(response){
-	  			$scope.myReportees = response.data.reporteesEmailID ;
+	  			
+	  			$scope.myReportees = response.data.reportees ;
+	  			$scope.mySelectedConstraints(response.data.coplianceTargetForTeam);
 	  			
 	  			
 	  		},
@@ -200,6 +277,27 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		});
 	  }
 	
+	  $scope.enforceCompliance  = function(){
+		 var teamconstraints = [];
+		 if (theCtrl.training){
+			 teamconstraints.push('training');
+		 }
+		 if (theCtrl.phishing){
+			 teamconstraints.push('phishing');
+		 }
+		 
+		 appData.showBusy();
+		 var manager = {};
+		 manager.coplianceTargetForTeam = teamconstraints ;
+		 $http.post(appData.getHost()+'/ws/compliance/applyConstraints',manager , config)
+	  		.then(function(response){
+	  			appData.hideBusy();
+	  		},
+			function(response){
+	  			appData.hideBusy();
+	  			appData.popUp("Failure", " Please try again");
+	  			});
+	  }
 	  
 	  $scope.checkEnter = function(){
 			if(event.keyCode == 13){
@@ -219,7 +317,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		    
 		    $http.post(appData.getHost()+'/ws/compliance/reportee',manager , config)
 	  		.then(function(response){
-	  			
+	  			theCtrl.newReportee = "";
 	  			appData.hideBusy();
 	  			$scope.myReportees = response.data.reportees;
 	  			
@@ -310,12 +408,12 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		      template: 'Please Wait...',
 		      duration: 10000
 		    }).then(function(){
-		       console.log("The loading indicator is now displayed");
+		       
 		    });
 		  };
 	this.hideBusy = function(){
 		    $ionicLoading.hide().then(function(){
-		       console.log("The loading indicator is now hidden");
+		       
 		    });
 		  };
  

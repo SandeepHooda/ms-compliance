@@ -29,14 +29,74 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicL
 	
 	
 	var theCtrl = this;
-	$scope.emailAddress = window.localStorage.getItem('emailID');;
-	$scope.callCxf = function(){
-		
-		
-	
-		
+	 theCtrl.gotStatus = false;
+	 theCtrl.fullComplaint = false;
+	$scope.emailAddress = window.localStorage.getItem('emailID');
+
+	$scope.mySelectedConstraints = function(data){
+		  if (!data){
+			  return;
+		  }
+		  if (data.indexOf('training') >=0){
+			  theCtrl.training = true;
+			}else {
+				theCtrl.training = false;
+				theCtrl.fullComplaint = false;
+			}
+			if (data.indexOf('phishing') >=0){
+				theCtrl.phishing = true;
+			}else {
+				theCtrl.phishing = false;
+				theCtrl.fullComplaint = false;
+			}
+			if (theCtrl.phishing && theCtrl.training){
+				theCtrl.fullComplaint = true;
+			}
+	  }
+	 $scope.getMyComplianceStatus = function(){
+		 appData.showBusy();
+		  $http.get(appData.getHost()+'/ws/compliance/status/'+$scope.emailAddress)
+	  		.then(function(response){
+	  			
+	  			$scope.mySelectedConstraints( response.data.complianceTarget) ;
+	  			
+	  			theCtrl.gotStatus = true;
+	  			appData.hideBusy();
+	  			
+	  		},
+		function(response){
+	  			appData.hideBusy();
+			
+		});
+	  }
+
+	 $scope.iComply  = function(){
+		 var complianceTarget = [];
+		 if (theCtrl.training){
+			 complianceTarget.push('training');
+		 }
+		 if (theCtrl.phishing){
+			 complianceTarget.push('phishing');
+		 }
 		 
-	}
+		 if (complianceTarget && complianceTarget.length >=2){
+			 var member = {};
+			 member._id = $scope.emailAddress;
+			 member.complianceTarget = complianceTarget ;
+			 $http.post(appData.getHost()+'/ws/compliance/iComply',member , config)
+		  		.then(function(response){
+		  			appData.hideBusy();
+		  			theCtrl.fullComplaint = true;
+		  			$scope.mySelectedConstraints( response.data.complianceTarget) ;
+		  			//appData.popUp("Thanks", "We have recorded your response.");
+		  		},
+				function(response){
+		  			appData.hideBusy();
+		  			appData.popUp("Failure", " Please try again");
+		  			});
+		 }
+		
+	  }
 	
 	
 	 

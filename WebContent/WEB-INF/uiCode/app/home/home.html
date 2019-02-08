@@ -1,4 +1,4 @@
-<ion-view title="Compliance" cache-view="false"  class="backhroundcolor " ng-init="callCxf();" ng-controller="CTRL_HOME as $ctrl">
+<ion-view title="Compliance" cache-view="false"  class="backhroundcolor " ng-init="getMyComplianceStatus();" ng-controller="CTRL_HOME as $ctrl">
 
 <ion-header-bar class="bar-positive">
       <h1 class="title">Compliance</h1>   
@@ -7,6 +7,19 @@
 <ion-content class="padding">
 <div>
 	<span class="userName blockDisplay">Welcome {{emailAddress}}</span> 
+<span ng-if="$ctrl.gotStatus">
+	<span ng-if="!$ctrl.fullComplaint">	
+	<input type="checkbox" name="training" id="training" ng-change="iComply()" ng-model="$ctrl.training" ng-checked="$ctrl.training">
+	<label for="constraintCheckBoxTraining" style="  color: white;"><B>No training pending</B></label>
+	<br/><br/><br/>
+	<input type="checkbox" name="phishing" id="phishing" ng-change="iComply()" ng-model="$ctrl.phishing" ng-checked="$ctrl.phishing" >
+	<label for="constraintCheckBoxPhishing" style="  color: white;"><B>I didn't click any phishing email.</B></label>
+	</span>
+	
+	<span ng-if="$ctrl.fullComplaint">
+	<img ng-src="/ui/img/ok.png"  class="Imgcenter">
+	</span>
+</span>
 </div>
 </ion-content>
 </ion-view>

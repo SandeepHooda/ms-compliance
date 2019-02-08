@@ -1,8 +1,15 @@
-<ion-view title="My Team" class="backhroundcolor" cache-view="false"  ng-init="getReportees();" ng-controller="CTRL_reportees as $ctrl">
+<ion-view title="My Team" class="backhroundcolor" cache-view="false"  ng-init="getUserDetails();" ng-controller="CTRL_reportees as $ctrl">
 <ion-header-bar class="bar-positive" >
       <h1 class="title">Help</h1>
     </ion-header-bar>
 <ion-content class="padding">
+<span ng-if="myReportees && myReportees.length > 0">
+<span  style="  color: white;"><B>What compliance do you want your team to adhere to?</B></span>
+<input type="checkbox" name="training" id="training" ng-change="enforceCompliance()" ng-model="$ctrl.training" ng-checked="$ctrl.training">
+<label for="constraintCheckBoxTraining" style="  color: white;"><B>No training pending</B></label><br/>
+<input type="checkbox" name="phishing" id="phishing" ng-change="enforceCompliance()" ng-model="$ctrl.phishing" ng-checked="$ctrl.phishing" >
+<label for="constraintCheckBoxPhishing" style="  color: white;"><B>I didn't click any phishing email.</B></label>
+</span>
 <div class="list list-inset searchbox">
 			  <label class="item item-input searchboxInput">
 			    

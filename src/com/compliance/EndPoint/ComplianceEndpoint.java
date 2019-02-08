@@ -14,10 +14,6 @@ import com.compliance.vo.db.TeamMember;
 @Path("/compliance")
 public interface ComplianceEndpoint {
 	
-	@GET
-	@Path("/teamMember")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllTeamMembers();
 	
 	@GET
 	@Path("/status/{userEmailID}")
@@ -25,9 +21,9 @@ public interface ComplianceEndpoint {
 	public Response getMyComplianceStatus(@PathParam("userEmailID") String userEmailID);
 	
 	@GET
-	@Path("/reportees/{userEmailID}")
+	@Path("/userDetails/{userEmailID}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getMyReportees(@PathParam("userEmailID") String userEmailID);
+	public Response getMyDetails(@PathParam("userEmailID") String userEmailID);
 	
 	@POST
 	@Path("/reportee")
@@ -42,6 +38,16 @@ public interface ComplianceEndpoint {
 	@POST
 	@Path("/user")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response registerNewUser(TeamMember member);
+	public Response registerNewUser(Manager manager);
+	
+	@POST
+	@Path("/applyConstraints")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response applyConstraints(Manager manager);
+	
+	@POST
+	@Path("/iComply")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response iComply(TeamMember member);
 
 }
