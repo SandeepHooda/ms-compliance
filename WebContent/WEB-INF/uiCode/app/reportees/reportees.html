@@ -4,7 +4,7 @@
     </ion-header-bar>
 <ion-content class="padding">
 <span ng-if="myReportees && myReportees.length > 0">
-<span  style="  color: white;"><B>What compliance do you want your team to adhere to?</B></span>
+<span  style="  color: white;"><B>What compliance do you want your team to adhere to?</B></span><br/>
 <input type="checkbox" name="training" id="training" ng-change="enforceCompliance()" ng-model="$ctrl.training" ng-checked="$ctrl.training">
 <label for="constraintCheckBoxTraining" style="  color: white;"><B>No training pending</B></label><br/>
 <input type="checkbox" name="phishing" id="phishing" ng-change="enforceCompliance()" ng-model="$ctrl.phishing" ng-checked="$ctrl.phishing" >

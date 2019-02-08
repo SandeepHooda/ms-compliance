@@ -1,10 +1,11 @@
 package com.compliance.vo.db;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class TeamMember {
 	private String _id;//Email address
-	private Set<String> complianceTarget;
+	private Set<String> complianceTarget = new HashSet<String>();
 
 	public String get_id() {
 		return _id;
@@ -22,6 +23,8 @@ public class TeamMember {
 		this.complianceTarget = complianceTarget;
 	}
 
-	
+	public String toString() {
+		return "id : "+_id+" compliance "+complianceTarget;
+	}
 
 }

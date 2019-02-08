@@ -3,6 +3,7 @@ package com.compliance.Service;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.compliance.vo.db.Manager;
 import com.compliance.vo.db.TeamMember;
@@ -13,6 +14,7 @@ import mangodb.MangoDB;
 
 public class ComplianceServiceImpl implements ComplianceService {
 
+	private static final Logger log = Logger.getLogger(ComplianceServiceImpl.class.getName());
  private static SimpleDateFormat mmddyyyy = new SimpleDateFormat("MMddyyyy");
 	private String getMondayOfThisWeek() {
 		// get today and clear time of day
@@ -29,11 +31,18 @@ public class ComplianceServiceImpl implements ComplianceService {
 	}
 	@Override
 	public TeamMember getMyComplianceStatus(String userEmailID) {
-		
+		System.out.println("getMyComplianceStatus "+userEmailID+getMondayOfThisWeek());
 		//Get Usrer details from DB
 		String complianceStatusOfWeek =  MangoDB.getDocumentWithQuery("ms-compliance", "compliance-status", userEmailID+getMondayOfThisWeek()) ;
+		System.out.println("result  "+complianceStatusOfWeek);
 		Gson  json = new Gson();
-		return json.fromJson(complianceStatusOfWeek, new TypeToken<TeamMember>() {}.getType());
+		TeamMember member = json.fromJson(complianceStatusOfWeek, new TypeToken<TeamMember>() {}.getType());
+		if (null == member) {
+			member = new TeamMember();
+			member.set_id(userEmailID);
+		}
+		System.out.println(member.toString());
+		return member;
 		
 		
 	}
