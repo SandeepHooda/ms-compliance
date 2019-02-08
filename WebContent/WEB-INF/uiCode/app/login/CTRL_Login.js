@@ -14,7 +14,7 @@ APP.CONTROLLERS.controller ('CTRL_Login',['$scope','$state','$http','$ionicLoadi
 				$scope.createUser();
 			}
 		}
-	 $scope.createUser = function(position) {
+	 $scope.createUser = function() {
 		  
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
@@ -25,7 +25,7 @@ APP.CONTROLLERS.controller ('CTRL_Login',['$scope','$state','$http','$ionicLoadi
 	  		.then(function(response){
 	  			window.localStorage.setItem('emailID', theCtrl.emailAddress);
 	  			appData.hideBusy();
-	  			appData.popUp("Success!", "Loging success");
+	  			
 	  			$state.transitionTo('menu.tab.home');
 	  		},
 			function(response){

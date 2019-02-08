@@ -29,20 +29,13 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicL
 	
 	
 	var theCtrl = this;
-	
+	$scope.emailAddress = window.localStorage.getItem('emailID');;
 	$scope.callCxf = function(){
 		
 		
-		 $http.get(appData.getHost()+'/ws/poc/pocendpoint')
-	  		.then(function(response){
-	  			$scope.cxfResult = response.data.showButtonFlag ;
-	  			
-	  			
-	  		},
-			function(response){
-	  			
-	  			
-			});
+	
+		
+		 
 	}
 	
 	

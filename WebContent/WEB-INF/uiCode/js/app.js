@@ -21,10 +21,10 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					templateUrl:'menu.html'	
 					 
 					
-				}).state('menu.help',{
-					url:'/help',
-					templateUrl: 'app/help/help.html',
-					controller: 'CTRL_help'
+				}).state('menu.reportees',{
+					url:'/reportees',
+					templateUrl: 'app/reportees/reportees.html',
+					controller: 'CTRL_reportees'
 				}).state('menu.tab',{
 					url:'/tab',
 					abstract: true,

@@ -21,10 +21,10 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					templateUrl:'menu.html'	
 					 
 					
-				}).state('menu.help',{
-					url:'/help',
-					templateUrl: 'app/help/help.html',
-					controller: 'CTRL_help'
+				}).state('menu.reportees',{
+					url:'/reportees',
+					templateUrl: 'app/reportees/reportees.html',
+					controller: 'CTRL_reportees'
 				}).state('menu.tab',{
 					url:'/tab',
 					abstract: true,
@@ -75,23 +75,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
     }
   });
 })
-;APP.CONTROLLERS.controller ('CTRL_help',['$scope','$ionicLoading','$http','$ionicPopup','$state','$ionicSideMenuDelegate',
-    function($scope,$ionicLoading,$http,$ionicPopup, $state, $ionicSideMenuDelegate){
-	var theCtrl = this;
-	
-	$scope.showMenu = function () {
-		if(document.URL.indexOf('/menu/login') <0){//Disable hanburger in log in state
-			 $ionicSideMenuDelegate.toggleLeft();
-		}
-	   
-	  };
-	  
-	  var emailID = window.localStorage.getItem('emailID');
-	  if (!emailID){
-			$state.transitionTo('menu.login');
-		}
-	
-}]);APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicLoading','$http','$ionicPopup','appData','$timeout',
+;APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicLoading','$http','$ionicPopup','appData','$timeout',
     function($scope,$state,$rootScope,$ionicLoading,$http,$ionicPopup, appData,$timeout){
 	//cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=myreversedclientid
 	//cordova plugin add cordova-plugin-keyboard
@@ -122,20 +106,13 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	
 	
 	var theCtrl = this;
-	
+	$scope.emailAddress = window.localStorage.getItem('emailID');;
 	$scope.callCxf = function(){
 		
 		
-		 $http.get(appData.getHost()+'/ws/poc/pocendpoint')
-	  		.then(function(response){
-	  			$scope.cxfResult = response.data.showButtonFlag ;
-	  			
-	  			
-	  		},
-			function(response){
-	  			
-	  			
-			});
+	
+		
+		 
 	}
 	
 	
@@ -166,7 +143,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 				$scope.createUser();
 			}
 		}
-	 $scope.createUser = function(position) {
+	 $scope.createUser = function() {
 		  
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
@@ -177,7 +154,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	  		.then(function(response){
 	  			window.localStorage.setItem('emailID', theCtrl.emailAddress);
 	  			appData.hideBusy();
-	  			appData.popUp("Success!", "Loging success");
+	  			
 	  			$state.transitionTo('menu.tab.home');
 	  		},
 			function(response){
@@ -187,7 +164,97 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		}
 	  
 }
-]);APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup','$ionicLoading',
+]);APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','$ionicPopup','$state','$ionicSideMenuDelegate','appData', 
+    function($scope,$ionicLoading,$http,$ionicPopup, $state, $ionicSideMenuDelegate,appData ){
+	var theCtrl = this;
+	var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+	$scope.myReportees = [];
+
+	$scope.showMenu = function () {
+		if(document.URL.indexOf('/menu/login') <0){//Disable hanburger in log in state
+			 $ionicSideMenuDelegate.toggleLeft();
+		}
+	   
+	  };
+	  
+	  $scope.emailAddress = window.localStorage.getItem('emailID');
+	  if (!$scope.emailAddress){
+			$state.transitionTo('menu.login');
+		}
+	  
+	  $scope.getReportees = function(){
+		  $http.get(appData.getHost()+'/ws/compliance/reportees/'+$scope.emailAddress)
+	  		.then(function(response){
+	  			$scope.myReportees = response.data.reporteesEmailID ;
+	  			
+	  			
+	  		},
+		function(response){
+			
+			
+		});
+	  }
+	
+	  
+	  $scope.checkEnter = function(){
+			if(event.keyCode == 13){
+				$scope.addReportee();
+			}
+		}
+	 $scope.addReportee = function(position) {
+		 if (!theCtrl.newReportee){
+			 return;
+		 }
+		  
+		   var manager = {};
+		   manager._id = $scope.emailAddress ;
+		   manager.reportees = [];
+		   manager.reportees.push(theCtrl.newReportee);
+		   appData.showBusy();
+		    
+		    $http.post(appData.getHost()+'/ws/compliance/reportee',manager , config)
+	  		.then(function(response){
+	  			
+	  			appData.hideBusy();
+	  			$scope.myReportees = response.data.reportees;
+	  			
+	  		},
+			function(response){
+	  			appData.hideBusy();
+	  			appData.popUp("Failure", " Please try again");
+	  			});
+		}
+	 $scope.deleteReportee = function(index){
+		 
+		 var confirmPopup = $ionicPopup.confirm({
+		     title: 'Confirmation',
+		     template: 'Do you want to delete '+$scope.myReportees[index] +' from your team?'
+		   });
+
+		   confirmPopup.then(function(res) {
+			   if (res){
+				   $http.delete(appData.getHost()+'/ws/compliance/reportee/'+$scope.emailAddress+"/"+$scope.myReportees[index] )
+			  		.then(function(response){
+			  			
+			  			appData.hideBusy();
+			  			$scope.myReportees = response.data.reportees;
+			  			
+			  		},
+					function(response){
+			  			appData.hideBusy();
+			  			appData.popUp("Failure", " Please try again");
+			  			});
+			   }
+		   })
+			 
+			    
+	}
+}]);APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup','$ionicLoading',
     function( $window,dataRestore, $ionicPopup, $ionicLoading){
 	
 	this.getHost = function () {
@@ -243,12 +310,12 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		      template: 'Please Wait...',
 		      duration: 10000
 		    }).then(function(){
-		       
+		       console.log("The loading indicator is now displayed");
 		    });
 		  };
 	this.hideBusy = function(){
 		    $ionicLoading.hide().then(function(){
-		       
+		       console.log("The loading indicator is now hidden");
 		    });
 		  };
  
