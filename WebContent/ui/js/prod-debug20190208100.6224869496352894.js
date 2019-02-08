@@ -146,7 +146,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	
 	this.getHost = function () {
 		
-		var host = "/Ionic_CXF_Seed";
+		var host = "";
 		
 		
 		return host;

@@ -3,7 +3,7 @@ APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup',
 	
 	this.getHost = function () {
 		
-		var host = "/Ionic_CXF_Seed";
+		var host = "";
 		
 		
 		return host;
