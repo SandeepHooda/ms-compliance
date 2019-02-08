@@ -49,6 +49,10 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
+				}).state('menu.login',{
+					url:'/login',
+					templateUrl: 'app/login/login.html',
+					controller: 'CTRL_Login'
 				})
 				$urlRouterProvider.otherwise('/menu/tab/home');
 			}

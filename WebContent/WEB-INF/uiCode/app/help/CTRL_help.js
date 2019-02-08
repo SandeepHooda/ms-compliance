@@ -8,5 +8,10 @@ APP.CONTROLLERS.controller ('CTRL_help',['$scope','$ionicLoading','$http','$ioni
 		}
 	   
 	  };
+	  
+	  var emailID = window.localStorage.getItem('emailID');
+	  if (!emailID){
+			$state.transitionTo('menu.login');
+		}
 	
 }])

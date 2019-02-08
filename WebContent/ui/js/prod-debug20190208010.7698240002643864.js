@@ -49,6 +49,10 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
+				}).state('menu.login',{
+					url:'/login',
+					templateUrl: 'app/login/login.html',
+					controller: 'CTRL_Login'
 				})
 				$urlRouterProvider.otherwise('/menu/tab/home');
 			}
@@ -81,6 +85,11 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		}
 	   
 	  };
+	  
+	  var emailID = window.localStorage.getItem('emailID');
+	  if (!emailID){
+			$state.transitionTo('menu.login');
+		}
 	
 }]);APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicLoading','$http','$ionicPopup','appData','$timeout',
     function($scope,$state,$rootScope,$ionicLoading,$http,$ionicPopup, appData,$timeout){
@@ -141,8 +150,45 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		 
 		  
 	 
-}]);APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup',
-    function( $window,dataRestore, $ionicPopup){
+}]);APP.CONTROLLERS.controller ('CTRL_Login',['$scope','$state','$http','$ionicLoading','appData',
+    function($scope,$state,$http,$ionicLoading,appData){
+	var theCtrl = this;
+	$scope.host = appData.getHost();
+	
+	 var config = {
+	            headers : {
+	                'Content-Type': 'application/json;'
+	            }
+	        }
+	
+	 $scope.checkEnter = function(){
+			if(event.keyCode == 13){
+				$scope.createUser();
+			}
+		}
+	 $scope.createUser = function(position) {
+		  
+		   var teamMember = {};
+		   teamMember._id = theCtrl.emailAddress;
+		   
+		   appData.showBusy();
+		    
+		    $http.post(appData.getHost()+'/ws/compliance/user',teamMember , config)
+	  		.then(function(response){
+	  			window.localStorage.setItem('emailID', theCtrl.emailAddress);
+	  			appData.hideBusy();
+	  			appData.popUp("Success!", "Loging success");
+	  			$state.transitionTo('menu.tab.home');
+	  		},
+			function(response){
+	  			appData.hideBusy();
+	  			appData.popUp("Failure", "Loging failure. Please try again");
+	  			});
+		}
+	  
+}
+]);APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup','$ionicLoading',
+    function( $window,dataRestore, $ionicPopup, $ionicLoading){
 	
 	this.getHost = function () {
 		
@@ -180,6 +226,32 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	this.getCartItems = function(){
 		return this.cartItems;
 	}
+	
+	this.popUp = function(subject, body){
+		var confirmPopup = $ionicPopup.confirm({
+		     title: subject,
+		     template: body
+		   });
+		 confirmPopup.then(function(res) {
+			 
+		  });
+	}
+	
+	//Busy icon
+	this.showBusy = function() {
+		    $ionicLoading.show({
+		      template: 'Please Wait...',
+		      duration: 10000
+		    }).then(function(){
+		       console.log("The loading indicator is now displayed");
+		    });
+		  };
+	this.hideBusy = function(){
+		    $ionicLoading.hide().then(function(){
+		       console.log("The loading indicator is now hidden");
+		    });
+		  };
+ 
 	
 	
 }

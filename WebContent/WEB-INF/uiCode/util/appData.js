@@ -1,5 +1,5 @@
-APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup',
-    function( $window,dataRestore, $ionicPopup){
+APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup','$ionicLoading',
+    function( $window,dataRestore, $ionicPopup, $ionicLoading){
 	
 	this.getHost = function () {
 		
@@ -37,6 +37,32 @@ APP.SERVICES.service ('appData',['$window','dataRestore','$ionicPopup',
 	this.getCartItems = function(){
 		return this.cartItems;
 	}
+	
+	this.popUp = function(subject, body){
+		var confirmPopup = $ionicPopup.confirm({
+		     title: subject,
+		     template: body
+		   });
+		 confirmPopup.then(function(res) {
+			 
+		  });
+	}
+	
+	//Busy icon
+	this.showBusy = function() {
+		    $ionicLoading.show({
+		      template: 'Please Wait...',
+		      duration: 10000
+		    }).then(function(){
+		       console.log("The loading indicator is now displayed");
+		    });
+		  };
+	this.hideBusy = function(){
+		    $ionicLoading.hide().then(function(){
+		       console.log("The loading indicator is now hidden");
+		    });
+		  };
+ 
 	
 	
 }

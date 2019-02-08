@@ -34,7 +34,7 @@
     
     <jaxrs:server id="restContainer" address="/">
         <jaxrs:serviceFactories>
-        
+        <ref bean = "complianceEndPointFact"></ref>
         <ref bean = "pocEndPointFact"></ref>
         </jaxrs:serviceFactories>
          <jaxrs:providers>
@@ -50,16 +50,27 @@
    <bean id="pocEndPointFact" class="org.apache.cxf.jaxrs.spring.SpringResourceFactory">
    		<property name="beanId" value="endpoint"/>
   </bean>
-  
-   <bean id="endpoint" class="com.poc.EndPoint.PocEndpointImpl">
+  <bean id="endpoint" class="com.poc.EndPoint.PocEndpointImpl">
    		<property name="facade" ref="facade"/>
    </bean>
-  
    <bean id="facade" class="com.poc.Facade.PocFacade">
    		<property name="service" ref="service"/>
    </bean>
-  
    <bean id="service" class="com.poc.Service.PocServiceImpl">
    </bean>
+   
+  <bean id="complianceEndPointFact" class="org.apache.cxf.jaxrs.spring.SpringResourceFactory">
+   		<property name="beanId" value="complianceEndPoint"/>
+  </bean>
+  <bean id="complianceEndPoint" class="com.compliance.EndPoint.ComplianceEndpointImpl">
+   		<property name="facade" ref="complianceFacade"/>
+   </bean>
+   <bean id="complianceFacade" class="com.compliance.Facade.ComplianceFacade">
+   		<property name="service" ref="complianceService"/>
+   </bean>
+   <bean id="complianceService" class="com.compliance.Service.ComplianceServiceImpl">
+   </bean>
+  
+  
 
 </beans>
