@@ -157,6 +157,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		 }
 		 
 		 if (complianceTarget && complianceTarget.length >=2){
+			 appData.showBusy();
 			 var member = {};
 			 member._id = $scope.emailAddress;
 			 member.complianceTarget = complianceTarget ;
@@ -204,7 +205,11 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 			}
 		}
 	 $scope.createUser = function() {
-		  
+		  if (!theCtrl.emailAddress){
+			  return;
+		  }else {
+			  theCtrl.emailAddress = theCtrl.emailAddress.toLowerCase();
+		  }
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
 		   
@@ -288,6 +293,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		 
 		 appData.showBusy();
 		 var manager = {};
+		 manager._id = $scope.emailAddress;
 		 manager.coplianceTargetForTeam = teamconstraints ;
 		 $http.post(appData.getHost()+'/ws/compliance/applyConstraints',manager , config)
 	  		.then(function(response){
@@ -307,6 +313,8 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 	 $scope.addReportee = function(position) {
 		 if (!theCtrl.newReportee){
 			 return;
+		 }else {
+			 theCtrl.newReportee = theCtrl.newReportee.toLowerCase();
 		 }
 		  
 		   var manager = {};

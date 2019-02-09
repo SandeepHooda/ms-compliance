@@ -15,7 +15,11 @@ APP.CONTROLLERS.controller ('CTRL_Login',['$scope','$state','$http','$ionicLoadi
 			}
 		}
 	 $scope.createUser = function() {
-		  
+		  if (!theCtrl.emailAddress){
+			  return;
+		  }else {
+			  theCtrl.emailAddress = theCtrl.emailAddress.toLowerCase();
+		  }
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
 		   

@@ -62,6 +62,7 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 		 
 		 appData.showBusy();
 		 var manager = {};
+		 manager._id = $scope.emailAddress;
 		 manager.coplianceTargetForTeam = teamconstraints ;
 		 $http.post(appData.getHost()+'/ws/compliance/applyConstraints',manager , config)
 	  		.then(function(response){
@@ -81,6 +82,8 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 	 $scope.addReportee = function(position) {
 		 if (!theCtrl.newReportee){
 			 return;
+		 }else {
+			 theCtrl.newReportee = theCtrl.newReportee.toLowerCase();
 		 }
 		  
 		   var manager = {};

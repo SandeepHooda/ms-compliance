@@ -10,10 +10,10 @@
 <span ng-if="$ctrl.gotStatus">
 	<span ng-if="!$ctrl.fullComplaint">	
 	<input type="checkbox" name="training" id="training" ng-change="iComply()" ng-model="$ctrl.training" ng-checked="$ctrl.training">
-	<label for="constraintCheckBoxTraining" style="  color: white;"><B>No training pending</B></label>
+	<label for="constraintCheckBoxTraining" style="  color: white;"><B>I checked "MS portal" and there is no training pending for me.</B></label>
 	<br/><br/><br/>
 	<input type="checkbox" name="phishing" id="phishing" ng-change="iComply()" ng-model="$ctrl.phishing" ng-checked="$ctrl.phishing" >
-	<label for="constraintCheckBoxPhishing" style="  color: white;"><B>I didn't click any phishing email.</B></label>
+	<label for="constraintCheckBoxPhishing" style="  color: white;"><B>I do check the sender of the email and I don't click on any link that takes me to non out side MS network.  I didn't click any phishing email.</B></label>
 	</span>
 	
 	<span ng-if="$ctrl.fullComplaint">

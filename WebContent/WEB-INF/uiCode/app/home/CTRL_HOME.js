@@ -80,6 +80,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$state','$rootScope','$ionicL
 		 }
 		 
 		 if (complianceTarget && complianceTarget.length >=2){
+			 appData.showBusy();
 			 var member = {};
 			 member._id = $scope.emailAddress;
 			 member.complianceTarget = complianceTarget ;
