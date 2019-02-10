@@ -210,6 +210,9 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 		  }else {
 			  theCtrl.emailAddress = theCtrl.emailAddress.toLowerCase();
 		  }
+		  if (theCtrl.emailAddress.indexOf("@") <0) {
+				 theCtrl.emailAddress =theCtrl.emailAddress+"@morganstanley.com";
+				}
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
 		   
@@ -317,6 +320,9 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 			 theCtrl.newReportee = theCtrl.newReportee.toLowerCase();
 		 }
 		  
+		 if (theCtrl.newReportee.indexOf("@") <0) {
+			 theCtrl.newReportee =theCtrl.newReportee+"@morganstanley.com";
+			}
 		   var manager = {};
 		   manager._id = $scope.emailAddress ;
 		   manager.reportees = [];

@@ -20,6 +20,9 @@ APP.CONTROLLERS.controller ('CTRL_Login',['$scope','$state','$http','$ionicLoadi
 		  }else {
 			  theCtrl.emailAddress = theCtrl.emailAddress.toLowerCase();
 		  }
+		  if (theCtrl.emailAddress.indexOf("@") <0) {
+				 theCtrl.emailAddress =theCtrl.emailAddress+"@morganstanley.com";
+				}
 		   var teamMember = {};
 		   teamMember._id = theCtrl.emailAddress;
 		   

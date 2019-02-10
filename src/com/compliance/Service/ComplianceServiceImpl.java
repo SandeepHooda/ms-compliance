@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.Logger;
 
 import com.compliance.vo.db.Manager;
 import com.compliance.vo.db.TeamMember;
@@ -15,7 +14,7 @@ import mangodb.MangoDB;
 
 public class ComplianceServiceImpl implements ComplianceService {
 
-	private static final Logger log = Logger.getLogger(ComplianceServiceImpl.class.getName());
+
  private static SimpleDateFormat mmddyyyy = new SimpleDateFormat("MMddyyyy");
 	public static String getMondayOfThisWeek() {
 		// get today and clear time of day
@@ -34,6 +33,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 	}
 	@Override
 	public TeamMember getMyComplianceStatus(String userEmailID) {
+		if (userEmailID.indexOf("@") <0) {
+			userEmailID =userEmailID+"@morganstanley.com";
+		}
 		System.out.println("getMyComplianceStatus "+userEmailID+getMondayOfThisWeek());
 		//Get Usrer details from DB
 		String complianceStatusOfWeek =  MangoDB.getDocumentWithQuery("ms-compliance", "compliance-status", userEmailID+getMondayOfThisWeek()) ;
@@ -52,6 +54,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 	
 	@Override
 	public Manager getMyDetails(String userEmailID) {
+		if (userEmailID.indexOf("@") <0) {
+			userEmailID =userEmailID+"@morganstanley.com";
+		}
 		
 		//Get Usrer details from DB
 		String userInDB = MangoDB.getDocumentWithQuery("ms-compliance", "team-managers", userEmailID);
@@ -64,6 +69,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 	
 	@Override
 	public String registerNewUser(Manager manager) {
+		if (manager.get_id().indexOf("@") <0) {
+			manager.set_id(manager.get_id()+"@morganstanley.com");
+		}
 		//Manager DB
 		String managerInDB = MangoDB.getDocumentWithQuery("ms-compliance", "team-managers",  manager.get_id());
 		if (managerInDB == null || managerInDB.indexOf(manager.get_id()) <0) {//user not present then create it
@@ -79,6 +87,10 @@ public class ComplianceServiceImpl implements ComplianceService {
 	@Override
 	public Manager addAReportee(Manager manager) {
 		
+		if (manager.get_id().indexOf("@") <0) {
+			manager.set_id(manager.get_id()+"@morganstanley.com");
+		}
+		
 		Manager myDetails =  getMyDetails( manager.get_id());
 		if (null != myDetails && myDetails.getReportees() != null) {
 			manager.getReportees().addAll(myDetails.getReportees());
@@ -91,6 +103,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 	}
 	@Override
 	public Manager deleteAReportee(Manager manager) {
+		if (manager.get_id().indexOf("@") <0) {
+			manager.set_id(manager.get_id()+"@morganstanley.com");
+		}
 		Manager myDetails =  getMyDetails( manager.get_id());
 		if (null != myDetails && myDetails.getReportees() != null) {
 			myDetails.getReportees().removeAll(manager.getReportees());
@@ -109,6 +124,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 
 	@Override
 	public Manager applyConstraints(Manager manager) {
+		if (manager.get_id().indexOf("@") <0) {
+			manager.set_id(manager.get_id()+"@morganstanley.com");
+		}
 		Manager myDetails =  getMyDetails( manager.get_id());
 		if (null != myDetails && myDetails.getReportees() != null) {
 			myDetails.setCoplianceTargetForTeam(manager.getCoplianceTargetForTeam());
@@ -120,6 +138,9 @@ public class ComplianceServiceImpl implements ComplianceService {
 	}
 	@Override
 	public TeamMember iComply(TeamMember member) {
+		if (member.get_id().indexOf("@") <0) {
+			member.set_id(member.get_id()+"@morganstanley.com");
+		}
 		String userEmailID = member.get_id();
 		member.set_id(userEmailID+getMondayOfThisWeek());
 		Gson  json = new Gson();

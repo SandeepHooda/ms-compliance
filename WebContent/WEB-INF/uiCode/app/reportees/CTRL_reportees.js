@@ -86,6 +86,9 @@ APP.CONTROLLERS.controller ('CTRL_reportees',['$scope','$ionicLoading','$http','
 			 theCtrl.newReportee = theCtrl.newReportee.toLowerCase();
 		 }
 		  
+		 if (theCtrl.newReportee.indexOf("@") <0) {
+			 theCtrl.newReportee =theCtrl.newReportee+"@morganstanley.com";
+			}
 		   var manager = {};
 		   manager._id = $scope.emailAddress ;
 		   manager.reportees = [];
