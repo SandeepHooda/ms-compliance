@@ -3,6 +3,7 @@ package com.compliance.Service;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 
 import com.compliance.vo.db.Manager;
@@ -16,15 +17,17 @@ public class ComplianceServiceImpl implements ComplianceService {
 
 	private static final Logger log = Logger.getLogger(ComplianceServiceImpl.class.getName());
  private static SimpleDateFormat mmddyyyy = new SimpleDateFormat("MMddyyyy");
-	private String getMondayOfThisWeek() {
+	public static String getMondayOfThisWeek() {
 		// get today and clear time of day
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+		Calendar cal = new GregorianCalendar();
+		/*cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
 		cal.clear(Calendar.MINUTE);
 		cal.clear(Calendar.SECOND);
-		cal.clear(Calendar.MILLISECOND);
+		cal.clear(Calendar.MILLISECOND);*/
 
 		// get start of this week in milliseconds
+		
+		System.out.println(" first day of week is "+cal.getFirstDayOfWeek());
 		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 		return mmddyyyy.format(new Date(cal.getTimeInMillis()));
 		
@@ -80,6 +83,7 @@ public class ComplianceServiceImpl implements ComplianceService {
 		if (null != myDetails && myDetails.getReportees() != null) {
 			manager.getReportees().addAll(myDetails.getReportees());
 		}
+		manager.setHasReportees(true);
 		Gson  json = new Gson();
 		String data = json.toJson(manager, new TypeToken<Manager>() {}.getType());
 		MangoDB.createNewDocumentInCollection("ms-compliance", "team-managers", data, null);
@@ -91,6 +95,11 @@ public class ComplianceServiceImpl implements ComplianceService {
 		if (null != myDetails && myDetails.getReportees() != null) {
 			myDetails.getReportees().removeAll(manager.getReportees());
 			manager.setReportees(myDetails.getReportees());
+		}
+		if (manager.getReportees() !=null && manager.getReportees().size() > 0) {
+			manager.setHasReportees(true);
+		}else {
+			manager.setHasReportees(false);
 		}
 		Gson  json = new Gson();
 		String data = json.toJson(manager, new TypeToken<Manager>() {}.getType());

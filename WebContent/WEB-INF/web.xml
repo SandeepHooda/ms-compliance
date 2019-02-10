@@ -30,13 +30,33 @@
     <servlet-name>cxf</servlet-name>
     <url-pattern>/ws/*</url-pattern>
   </servlet-mapping>
-    <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>SessionTest</web-resource-name>
-         <url-pattern>/*</url-pattern>
-      </web-resource-collection>
-      <user-data-constraint>
-         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>
-   </security-constraint>
+  <servlet>
+    <servlet-name>RemindAboutCompliance</servlet-name>
+    <servlet-class>com.monitor.RemindAboutCompliance</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RemindAboutCompliance</servlet-name>
+    <url-pattern>/RemindAboutCompliance</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>DeleteWeekly</servlet-name>
+    <servlet-class>com.monitor.DeleteWeekly</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteWeekly</servlet-name>
+    <url-pattern>/DeleteWeekly</url-pattern>
+  </servlet-mapping>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>SessionTest</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
 </web-app>

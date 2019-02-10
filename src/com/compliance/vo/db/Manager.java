@@ -4,6 +4,7 @@ import java.util.Set;
 
 public class Manager {
 	private String _id;//Email address
+	private boolean hasReportees;
 	private Set<String> reportees;
 	private Set<String> coplianceTargetForTeam;
 	public String get_id() {
@@ -23,6 +24,12 @@ public class Manager {
 	}
 	public void setCoplianceTargetForTeam(Set<String> coplianceTargetForTeam) {
 		this.coplianceTargetForTeam = coplianceTargetForTeam;
+	}
+	public boolean isHasReportees() {
+		return hasReportees;
+	}
+	public void setHasReportees(boolean hasReportees) {
+		this.hasReportees = hasReportees;
 	}
 	
 
